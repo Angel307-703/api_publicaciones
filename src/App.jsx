@@ -24,7 +24,7 @@ export default function App() {
   };
 
   const postsFiltrados = posts.filter(post => 
-    post.title.includes(search)
+    post.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
