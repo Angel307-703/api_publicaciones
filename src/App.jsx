@@ -41,20 +41,24 @@ export default function App() {
         />
 
         <p style={{ fontSize: '14px', color: '#666', marginBottom: '16px' }}>
-          Resultados encontrados: {posts.length}
+          Resultados encontrados: {postsFiltrados.length}
         </p>
 
         {loading ? (
           <p>Cargando publicaciones...</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {postsFiltrados.slice(0, 5).map(post => (
-              <div key={post.id} style={{ padding: '12px', background: '#f9f9f9', borderRadius: '6px', border: '1px solid #eee' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 'bold', margin: '0 0 4px 0' }}>{post.title}</h3>
-                <p style={{ fontSize: '13px', color: '#555', margin: '0 0 8px 0' }}>{post.body}</p>
-                <small style={{ color: '#007bff', fontWeight: 'bold' }}>Autor: {obtenerAutor(post.userId)}</small>
-              </div>
-            ))}
+            {postsFiltrados.length === 0 ? (
+              <p style={{ color: '#888', fontSize: '14px' }}>No se encontraron publicaciones con esa palabra.</p>
+            ) : (
+              postsFiltrados.slice(0, 10).map(post => (
+                <div key={post.id} style={{ padding: '12px', background: '#f9f9f9', borderRadius: '6px', border: '1px solid #eee' }}>
+                  <h3 style={{ fontSize: '16px', fontWeight: 'bold', margin: '0 0 4px 0' }}>{post.title}</h3>
+                  <p style={{ fontSize: '13px', color: '#555', margin: '0 0 8px 0' }}>{post.body}</p>
+                  <small style={{ color: '#007bff', fontWeight: 'bold' }}>Autor: {obtenerAutor(post.userId)}</small>
+                </div>
+              ))
+            )}
           </div>
         )}
       </div>
