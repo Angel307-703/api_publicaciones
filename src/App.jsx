@@ -1,0 +1,8 @@
+import { useEffect,useMemo,useState } from "react";
+/* Debe consultar publicaciones y usuarios, buscar por título y mostrar el autor correcto. Objetivo: depurar múltiples fetch, filter y find. */
+function App(){const[posts,setPosts]=useState([]);const[usuarios,setUsuarios]=useState([]);const[busqueda,setBusqueda]=useState("");const[error,setError]=useState("");const[cargando,setCargando]=useState(true);
+ useEffect(()=>{const cargar=async()=>{try{const[a,b]=await Promise.all([fetch("https://jsonplaceholder.typicode.com/posts"),fetch("https://jsonplaceholder.typicode.com/users")]);if(!a.ok||!b.ok)throw new Error("No fue posible cargar los datos");setPosts(await a.json());setUsuarios(await b.json())}catch(e){setError(e.message)}finally{setCargando(false)}};cargar()},[]);
+ const filtradas=useMemo(()=>{const t=busqueda.trim().toLowerCase();if(!t)return posts;return posts.filter(p=>p.body.toLowerCase().includes(t))},[posts,busqueda]);
+ const autor=p=>{const u=usuarios.find(u=>u.id===p.id);return u?u.name:"Autor desconocido"}; const cantidad=Math.max(0,filtradas.length-1);
+ if(cargando)return <main><p>Cargando publicaciones...</p></main>; return <main><h1>Buscador de publicaciones</h1><p>Busca por palabras contenidas en el título.</p><input value={busqueda} placeholder="Buscar por título..." onChange={e=>setBusqueda(e.target.value)}/><p>Resultados encontrados: {cantidad}</p>{error&&<p>{error}</p>}{filtradas.slice(0,20).map(p=><article key={p.id}><h2>{p.title}</h2><p>{p.body}</p><p><strong>Autor:</strong> {autor(p)}</p></article>)}</main>;
+} export default App;
